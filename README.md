@@ -76,3 +76,7 @@ To run the tests, use the following command:
 ```bash
 python3 -m unittest discover tests
 ```
+
+## Attribution
+
+This project uses the [CMU Pronouncing Dictionary](http://www.speech.cs.cmu.edu/cgi-bin/cmudict). The CMU Pronouncing Dictionary is licensed under a [BSD-2-Clause](https://opensource.org/licenses/BSD-2-Clause) license.
