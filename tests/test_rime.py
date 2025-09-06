@@ -46,5 +46,9 @@ class TestRime(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
         self.assertIn('+', result.stdout) # Check for grid table format
 
+    def test_visidata_flag(self):
+        result = subprocess.run(['rime', 'rhyme', 'time', '--visidata'], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0)
+
 if __name__ == '__main__':
     unittest.main()
