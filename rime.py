@@ -15,12 +15,14 @@ def find_words(df, word, key_column, fields):
             selected_fields = df.columns.tolist()
         else:
             selected_fields = fields.split('|')
+            if 'word' not in selected_fields:
+                selected_fields.insert(0, 'word')
 
         if len(selected_fields) == 1 and selected_fields[0] == 'word':
             for w in found_words_df['word']:
                 print(w)
         else:
-            print(found_words_df[selected_fields].to_csv(index=False))
+            print(found_words_df[selected_fields].to_string(index=False))
 
     except IndexError:
         print(f"Word '{word}' not found in the dictionary.")
