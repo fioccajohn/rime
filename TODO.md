@@ -1,6 +1,7 @@
 # TODO
 
 - [ ] Make the project installable and upload it to PyPI.
+  - [ ] Set up GitHub Actions to automatically publish to PyPI on main branch commits.
 - [ ] Use the `nltk` CMU dictionary as a backend.
 - [ ] Add a feature to support a custom word list.
 - [x] Install the program to the current computer!
