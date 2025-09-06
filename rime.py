@@ -2,6 +2,29 @@
 import click
 import pandas as pd
 
+def find_words(df, word, key_column, fields):
+    """Helper function to find words based on a key and return specified fields."""
+    try:
+        key_value = df[df['word'] == word.upper()].iloc[0][key_column]
+        found_words_df = df[(df[key_column] == key_value) & (df['word'] != word.upper())]
+
+        if found_words_df.empty:
+            return
+
+        if fields == '*':
+            selected_fields = df.columns.tolist()
+        else:
+            selected_fields = fields.split('|')
+
+        if len(selected_fields) == 1 and selected_fields[0] == 'word':
+            for w in found_words_df['word']:
+                print(w)
+        else:
+            print(found_words_df[selected_fields].to_csv(index=False))
+
+    except IndexError:
+        print(f"Word '{word}' not found in the dictionary.")
+
 @click.group()
 def cli():
     pass
@@ -17,67 +40,51 @@ def info():
 
 @cli.command()
 @click.argument('word')
-def rhyme(word):
+@click.option('--fields', '-f', default='word', help='Fields to return, e.g. "*" for all, or "col1|col2"')
+def rhyme(word, fields):
     """Finds words that rhyme with the given word."""
     df = pd.read_csv('cmu_dict.csv')
-    try:
-        rhyme_key = df[df['word'] == word.upper()].iloc[0]['rhyme']
-        rhyming_words = df[(df['rhyme'] == rhyme_key) & (df['word'] != word.upper())]['word']
-        if rhyming_words.empty:
-            pass
-        else:
-            for w in rhyming_words:
-                print(w)
-    except IndexError:
-        print(f"Word '{word}' not found in the dictionary.")
+    find_words(df, word, 'rhyme', fields)
 
 @cli.command()
 @click.argument('word')
-def consonance(word):
+@click.option('--fields', '-f', default='word', help='Fields to return, e.g. "*" for all, or "col1|col2"')
+def consonance(word, fields):
     """Finds words with the same consonance as the given word."""
     df = pd.read_csv('cmu_dict.csv')
-    try:
-        consonance_key = df[df['word'] == word.upper()].iloc[0]['consonance']
-        consonant_words = df[(df['consonance'] == consonance_key) & (df['word'] != word.upper())]['word']
-        if consonant_words.empty:
-            pass
-        else:
-            for w in consonant_words:
-                print(w)
-    except IndexError:
-        print(f"Word '{word}' not found in the dictionary.")
+    find_words(df, word, 'consonance', fields)
 
 @cli.command()
 @click.argument('word')
-def alliteration(word):
+@click.option('--fields', '-f', default='word', help='Fields to return, e.g. "*" for all, or "col1|col2"')
+def alliteration(word, fields):
     """Finds words with the same alliteration as the given word."""
     df = pd.read_csv('cmu_dict.csv')
-    try:
-        alliteration_key = df[df['word'] == word.upper()].iloc[0]['alliteration']
-        alliterative_words = df[(df['alliteration'] == alliteration_key) & (df['word'] != word.upper())]['word']
-        if alliterative_words.empty:
-            pass
-        else:
-            for w in alliterative_words:
-                print(w)
-    except IndexError:
-        print(f"Word '{word}' not found in the dictionary.")
+    find_words(df, word, 'alliteration', fields)
 
 @cli.command()
 @click.argument('word')
-def assonance(word):
+@click.option('--fields', '-f', default='word', help='Fields to return, e.g. "*" for all, or "col1|col2"')
+def assonance(word, fields):
     """Finds words with the same assonance as the given word."""
     df = pd.read_csv('cmu_dict.csv')
-    try:
-        assonance_key = df[df['word'] == word.upper()].iloc[0]['assonance']
-        assonant_words = df[(df['assonance'] == assonance_key) & (df['word'] != word.upper())]['word']
-        if assonant_words.empty:
-            pass
-        else:
-            for w in assonant_words:
-                print(w)
-    except IndexError:
-        print(f"Word '{word}' not found in the dictionary.")
+    find_words(df, word, 'assonance', fields)
+
+@cli.command(name='syllable-count')
+@click.argument('word')
+@click.option('--fields', '-f', default='word', help='Fields to return, e.g. "*" for all, or "col1|col2"')
+def syllable_count(word, fields):
+    """Finds words with the same syllable count as the given word."""
+    df = pd.read_csv('cmu_dict.csv')
+    find_words(df, word, 'syllable_count', fields)
+
+@cli.command(name='stress-pattern')
+@click.argument('word')
+@click.option('--fields', '-f', default='word', help='Fields to return, e.g. "*" for all, or "col1|col2"')
+def stress_pattern(word, fields):
+    """Finds words with the same stress pattern as the given word."""
+    df = pd.read_csv('cmu_dict.csv')
+    find_words(df, word, 'stress_pattern', fields)
 
 if __name__ == '__main__':
     cli()
