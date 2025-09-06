@@ -9,15 +9,18 @@ class TestRime(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
         self.assertIn('Number of words', result.stdout)
 
-    def test_rhyme_default(self):
+    def test_rhyme_default_fields(self):
         result = subprocess.run(['rime', 'rhyme', 'time'], capture_output=True, text=True)
         self.assertEqual(result.returncode, 0)
-        self.assertIn('ALL-TIME', result.stdout)
+        self.assertIn('word', result.stdout)
+        self.assertIn('phonemes', result.stdout)
+        self.assertIn('syllable_count', result.stdout)
 
     def test_rhyme_fields(self):
         result = subprocess.run(['rime', 'rhyme', 'time', '--fields', 'syllable_count'], capture_output=True, text=True)
         self.assertEqual(result.returncode, 0)
         self.assertIn('syllable_count', result.stdout)
+        self.assertNotIn('phonemes', result.stdout)
 
     def test_rhyme_format_csv(self):
         result = subprocess.run(['rime', 'rhyme', 'time', '--format', 'csv'], capture_output=True, text=True)
@@ -31,6 +34,17 @@ class TestRime(unittest.TestCase):
             json.loads(result.stdout)
         except json.JSONDecodeError:
             self.fail("Output is not valid JSON")
+
+    def test_rhyme_format_df(self):
+        result = subprocess.run(['rime', 'rhyme', 'time', '--format', 'df'], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0)
+        self.assertIn('word', result.stdout)
+        self.assertIn('phonemes', result.stdout)
+
+    def test_rhyme_table_format(self):
+        result = subprocess.run(['rime', 'rhyme', 'time', '--table-format', 'grid'], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0)
+        self.assertIn('+', result.stdout) # Check for grid table format
 
 if __name__ == '__main__':
     unittest.main()
