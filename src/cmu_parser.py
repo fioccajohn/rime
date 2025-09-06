@@ -6,7 +6,7 @@ def parse_cmu_dict():
     with columns for word, phonemes, syllable_count, stress_pattern, rhyme,
     alliteration, assonance, and consonance.
     """
-    cmu_file = 'CMU Pronouncing Dictionary.txt'
+    cmu_file = 'data/CMU Pronouncing Dictionary.txt'
     data = []
     with open(cmu_file, 'r', encoding='latin-1') as f:
         for line in f:
@@ -53,6 +53,6 @@ def parse_cmu_dict():
 
 if __name__ == '__main__':
     df = parse_cmu_dict()
-    output_path = 'cmu_dict.csv'
+    output_path = 'data/cmu_dict.csv'
     df.to_csv(output_path, index=False)
     print(f"DataFrame saved to {output_path}")
